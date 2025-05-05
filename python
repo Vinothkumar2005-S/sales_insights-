@@ -1,0 +1,52 @@
+## exploring data from excel file 
+import pandas as pd
+import matplotlib as plt
+df =pd.read_csv(r"E:\data sets\sales_and_customer_insights.csv")
+df.head(5)
+
+## handling missing values 
+df.dropna().sum()
+df1 = df.drop(columns = ['Unnamed: 0.1','Unnamed: 0'])
+df1
+
+## data cleaning 
+df2 = df.isnull().sum()
+df2
+df3 = df.isna().sum()
+df3
+
+## renaming columns 
+## Renaming columns 
+
+df_rename = df.rename(columns = {'Average_Order_Value':'Average_values','Purchase_Frequency':'Purchase_quantity'})
+df_rename
+
+df_rename1 = df_rename.drop(columns = ['Unnamed: 0.1','Unnamed: 0'])
+df_rename1
+df_rename2 =  df_rename1.drop(columns = 'split_text')
+df_rename2 
+
+## columns and str functions
+df2.columns
+df2.columns = df2.columns.str.lower()
+
+## data import to mysql
+
+import pymysql
+from sqlalchemy import create_engine
+
+engine_mysql = create_engine("mysql+pymysql://root:2005@127.0.0.1:3306/sales_insights")
+
+try:
+    create_engine
+    print("engine sucessfully active")
+except:
+    print("unable to connect")
+
+df2.to_sql('sales_insights',con=engine_mysql,if_exists='append',index = False)
+
+## import data to excel
+df2.to_excel('C:\\Users\\Admin\\OneDrive\\vk_salesdata.xlsx',index=False)
+
+
+
